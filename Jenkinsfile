@@ -30,9 +30,8 @@ pipeline {
                         echo "Copying new binary"
                         scp go-service deployer@45.144.52.219:/app/go-service
                         ssh deployer@45.144.52.219 "echo 'Making executable'; chmod +x /app/go-service && echo 'chmod succeeded' || echo 'chmod failed'"
-                        ssh deployer@45.144.52.219 "echo 'Stopping old process'; pkill -f go-service || echo 'No process to stop'"
-                        ssh deployer@45.144.52.219 "echo 'Starting new process'; nohup /app/go-service > /app/nohup.out 2>&1 &"
-                        ssh deployer@45.144.52.219 "echo 'Verifying process'; ps aux | grep '[g]o-service' || echo 'Process not running'"
+                        ssh deployer@45.144.52.219 "echo 'Restarting service'; sudo systemctl restart go-service && echo 'Service restarted' || echo 'Failed to restart service'"
+                        ssh deployer@45.144.52.219 "echo 'Verifying service'; sudo systemctl status go-service || echo 'Service not running'"
                         echo "Deploy completed"
                     '''
                 }
