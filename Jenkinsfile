@@ -3,7 +3,7 @@ pipeline {
          stages {
              stage('Checkout') {
                  steps {
-                     git url: 'git@github.com/Antonshepitko/go-service.git', branch: 'master'
+                     git url: 'git@github.com:Antonshepitko/go-service.git', branch: 'master'
                  }
              }
              stage('Build') {
