@@ -25,7 +25,9 @@ pipeline {
                 '''
                 sshagent(credentials: ['jenkins-ssh-credentials']) {
                     sh '''
-                        echo "Deploying to 45.144.52.219"
+                        echo "Preparing deployment to 45.144.52.219"
+                        ssh deployer@45.144.52.219 "rm -f /app/go-service || echo 'No file to remove'"
+                        echo "Copying new binary"
                         scp go-service deployer@45.144.52.219:/app/go-service
                         ssh deployer@45.144.52.219 "echo 'Making executable'; chmod +x /app/go-service && echo 'chmod succeeded' || echo 'chmod failed'"
                         ssh deployer@45.144.52.219 "echo 'Stopping old process'; pkill -f go-service || echo 'No process to stop'"
