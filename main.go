@@ -9,6 +9,8 @@ package main
          "github.com/prometheus/client_golang/prometheus/promhttp"
      )
 
+     const version = "1.1.0" // Добавляем версию для отладки
+
      var (
          requestCounter = prometheus.NewCounter(
              prometheus.CounterOpts{
@@ -25,12 +27,16 @@ package main
      func handler(w http.ResponseWriter, r *http.Request) {
          requestCounter.Inc()
          log.Printf("Received request from %s", r.RemoteAddr)
-         fmt.Fprintf(w, "Hello, World!")
+         fmt.Fprintf(w, "Hello, World! Version: %s", version)
+     }
+
+     func metricsHandler() http.Handler {
+         return promhttp.Handler()
      }
 
      func main() {
+         http.HandleFunc("/metrics", metricsHandler)
          http.HandleFunc("/", handler)
-         http.Handle("/metrics", promhttp.Handler())
-         log.Println("Server starting on port 8080...")
+         log.Printf("Server starting on port 8080, version %s...", version)
          http.ListenAndServe(":8080", nil)
      }
